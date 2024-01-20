@@ -5,11 +5,6 @@ export type Day = {
 }
 
 export const daysSurfed: Day[] = [
-        {
-        date: "2023-01-01",
-        surfed: true,
-        sickOrInjured: false
-    },
     {
         date: "2024-01-01",
         surfed: true,
@@ -33,7 +28,7 @@ export const daysSurfed: Day[] = [
     {
         date: "2024-01-05",
         surfed: false,
-        sickOrInjured: true
+        sickOrInjured: false
     },
     {
         date: "2024-01-06",

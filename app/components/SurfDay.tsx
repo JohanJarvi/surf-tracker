@@ -1,5 +1,6 @@
 import { Day } from "@/daysSurfed";
 import { DateTime } from "luxon";
+import { useState } from "react";
 
 type SurfDayProps = {
   day: Day;
@@ -18,6 +19,8 @@ type HoverBackgroundColours =
   | "hover:bg-slate-400";
 
 export const SurfDay = ({ day }: SurfDayProps) => {
+  const [hovering, setHovering] = useState(false);
+
   const getBackgroundString = (
     hover?: boolean,
     surfed?: boolean,
@@ -33,15 +36,28 @@ export const SurfDay = ({ day }: SurfDayProps) => {
     return hover ? "hover:bg-red-400" : "bg-red-200";
   };
 
+  const getDescriptiveString = (day: Day): string => {
+    if (day.surfed === undefined && day.sickOrInjured === undefined)
+      return "Get out there!";
+
+    if (day.surfed) return "Surfed!!";
+
+    if (day.sickOrInjured) return "Injured :'(";
+
+    return "Didn't surf.";
+  };
+
   return (
     <div
-      className={`flex justify-center w-80 p-10 text-xl font-bold ${getBackgroundString(
+      className={`flex justify-center w-80 p-10 ${getBackgroundString(
         true,
         day.surfed,
         day.sickOrInjured
       )} ${getBackgroundString(false, day.surfed, day.sickOrInjured)}`}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
     >
-      {DateTime.fromISO(day.date).day}
+      {hovering ? getDescriptiveString(day) : DateTime.fromISO(day.date).day}
     </div>
   );
 };
