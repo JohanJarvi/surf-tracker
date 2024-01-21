@@ -4,7 +4,7 @@ export type Day = {
     sickOrInjured?: boolean;
 }
 
-export const daysSurfed: Day[] = [
+export const SurfDays: Day[] = [
     {
         date: "2024-01-01",
         surfed: true,
