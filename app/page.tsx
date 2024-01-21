@@ -54,6 +54,13 @@ export default function Home() {
     setSurfDaysToShow(filterSurfDays(daysSurfed, displayYear, displayMonth));
   }, [displayYear, displayMonth]);
 
+  const totalDaysSurfed = surfDaysToShow.filter((day) => day.surfed).length;
+  const totalSurfableDays = surfDaysToShow.filter(
+    (surfDayToShow) =>
+      surfDayToShow.surfed !== undefined &&
+      surfDayToShow.sickOrInjured !== undefined
+  ).length;
+
   return (
     <div className="container mx-auto my-4 text-xl font-bold">
       <div className="flex justify-center gap-4">
@@ -81,6 +88,10 @@ export default function Home() {
         {surfDaysToShow.map((day) => (
           <SurfDay key={day.date} day={day} />
         ))}
+      </div>
+      <div className="flex justify-center">
+        {totalDaysSurfed} / {totalSurfableDays} (
+        {Math.ceil((totalDaysSurfed / totalSurfableDays) * 100)}%)
       </div>
     </div>
   );
