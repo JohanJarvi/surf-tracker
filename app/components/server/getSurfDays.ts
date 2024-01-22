@@ -28,7 +28,5 @@ export const getSurfDays = async (): Promise<SurfDaysData | undefined> => {
     return {daysSurfed: surfdays}
   } catch (err) {
     console.error(`Failed to connect to DB: '${err}'`);
-  } finally {
-    client.close();
   }
 };
