@@ -1,5 +1,10 @@
-import { Day } from "@/daysSurfed";
 import { Collection, MongoClient, ServerApiVersion } from "mongodb";
+
+export type Day = {
+    date: string;
+    surfed?: boolean;
+    sickOrInjured?: boolean;
+}
 
 type SurfDaysData = {
   daysSurfed: Day[];

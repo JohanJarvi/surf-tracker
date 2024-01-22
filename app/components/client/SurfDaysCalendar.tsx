@@ -1,9 +1,9 @@
 "use client";
 
-import { Day } from "@/daysSurfed";
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 import { SurfDay } from "./SurfDay";
+import { Day } from "../server/getSurfDays";
 
 type SurfDaysCalendarProps = {
   surfDays: Day[];

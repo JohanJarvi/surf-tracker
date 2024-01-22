@@ -1,6 +1,6 @@
-import { Day } from "@/daysSurfed";
 import { DateTime } from "luxon";
 import { useState } from "react";
+import { Day } from "../server/getSurfDays";
 
 type SurfDayProps = {
   day: Day;
