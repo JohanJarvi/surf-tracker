@@ -89,9 +89,13 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
         </div>
       </div>
       <div className="p-10 flex flex-row flex-wrap justify-center gap-4">
-        {surfDaysToShow.map((day) => (
-          <SurfDay key={day.date} day={day} />
-        ))}
+        {surfDaysToShow
+          .sort((a, b) =>
+            DateTime.fromISO(a.date) > DateTime.fromISO(b.date) ? 1 : -1
+          )
+          .map((day) => (
+            <SurfDay key={day.date} day={day} />
+          ))}
       </div>
       <div className="flex justify-center">
         {totalDaysSurfed} / {totalSurfableDays} (
