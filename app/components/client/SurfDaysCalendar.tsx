@@ -26,36 +26,39 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
     filterSurfDays(surfDays, displayYear, displayMonth)
   );
 
-  const shiftDisplayYear = (forward: boolean): void => {
-    let newYear;
-    if (forward) {
-      newYear = displayYear + 1;
-    } else {
-      newYear = displayYear - 1;
-    }
-
-    const yearToDisplay = uniqueYears.includes(newYear) ? newYear : displayYear;
-
-    setDisplayYear(yearToDisplay);
-  };
-
-  const shiftDisplayMonth = (forward: boolean): void => {
-    let newMonth: number;
-    if (forward) {
-      newMonth = displayMonth + 1;
-    } else {
-      newMonth = displayMonth - 1;
-    }
-
-    const monthContainsSurfDays =
-      surfDays.filter((day) => DateTime.fromISO(day.date).month === newMonth)
-        .length > 0;
-
-    if (monthContainsSurfDays) setDisplayMonth(newMonth);
-  };
-
   useEffect(() => {
-    setSurfDaysToShow(filterSurfDays(surfDays, displayYear, displayMonth));
+    const daysInMonth =
+      DateTime.fromObject({ year: displayYear, month: displayMonth })
+        .daysInMonth || 28;
+
+    const allPotentialSurfDaysInMonth: Day[] = [
+      ...Array(daysInMonth).keys(),
+    ].map((key) => ({
+      date:
+        DateTime.fromObject({
+          year: displayYear,
+          month: displayMonth,
+          day: key + 1,
+        }).toISODate() || "",
+    }));
+
+    const filteredSurfDays = filterSurfDays(
+      surfDays,
+      displayYear,
+      displayMonth
+    );
+
+    const mappedSurfDays = allPotentialSurfDaysInMonth.map(
+      (potentialSurfDay) => {
+        return (
+          filteredSurfDays.find(
+            (filteredSurfDay) => filteredSurfDay.date === potentialSurfDay.date
+          ) || potentialSurfDay
+        );
+      }
+    );
+
+    setSurfDaysToShow(mappedSurfDays);
   }, [displayYear, displayMonth]);
 
   const totalDaysSurfed = surfDaysToShow.filter((day) => day.surfed).length;
@@ -68,23 +71,32 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
   return (
     <div className="container mx-auto my-4 text-xl font-bold">
       <div className="flex justify-center gap-4">
-        <div className="cursor-pointer" onClick={() => shiftDisplayYear(false)}>
+        <div
+          className="cursor-pointer"
+          onClick={() => setDisplayYear(displayYear - 1)}
+        >
           {"<"}
         </div>
         <div>{displayYear}</div>
-        <div className="cursor-pointer" onClick={() => shiftDisplayYear(true)}>
+        <div
+          className="cursor-pointer"
+          onClick={() => setDisplayYear(displayYear + 1)}
+        >
           {">"}
         </div>
       </div>
       <div className="flex justify-center gap-4">
         <div
           className="cursor-pointer"
-          onClick={() => shiftDisplayMonth(false)}
+          onClick={() => setDisplayMonth(displayMonth - 1)}
         >
           {"<"}
         </div>
         <div>{DateTime.fromObject({ month: displayMonth }).monthLong}</div>
-        <div className="cursor-pointer" onClick={() => shiftDisplayMonth(true)}>
+        <div
+          className="cursor-pointer"
+          onClick={() => setDisplayMonth(displayMonth + 1)}
+        >
           {">"}
         </div>
       </div>
