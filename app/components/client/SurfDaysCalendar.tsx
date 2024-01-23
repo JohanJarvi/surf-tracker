@@ -118,7 +118,7 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
           {">"}
         </div>
       </div>
-      <div className="p-10 flex flex-row flex-wrap justify-center gap-4">
+      <div className="p-10 flex flex-row flex-wrap justify-center gap-5">
         {surfDaysToShow
           .sort((a, b) =>
             DateTime.fromISO(a.date) > DateTime.fromISO(b.date) ? 1 : -1

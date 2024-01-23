@@ -38,22 +38,26 @@ export const SurfDay = ({ day }: SurfDayProps) => {
 
   const getDescriptiveString = (day: Day): string => {
     if (day.surfed === undefined && day.sickOrInjured === undefined)
-      return "Get out there!";
+      return "Go surf!";
 
     if (day.surfed) return "Surfed!!";
 
     if (day.sickOrInjured) return "Injured :'(";
 
-    return "Didn't surf.";
+    return "No surf :(";
   };
 
   return (
     <div
-      className={`flex justify-center w-80 p-10 ${getBackgroundString(
+      className={`flex justify-center w-44 p-10 ${getBackgroundString(
         true,
         day.surfed,
         day.sickOrInjured
-      )} ${getBackgroundString(false, day.surfed, day.sickOrInjured)}`}
+      )} ${getBackgroundString(
+        false,
+        day.surfed,
+        day.sickOrInjured
+      )} rounded-lg`}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
