@@ -61,6 +61,24 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
     setSurfDaysToShow(mappedSurfDays);
   }, [displayYear, displayMonth]);
 
+  const handleMonthIncrements = (currentMonth: number): void => {
+    if (currentMonth + 1 === 13) {
+      setDisplayMonth(1);
+      setDisplayYear(displayYear + 1);
+    } else {
+      setDisplayMonth(currentMonth + 1);
+    }
+  };
+
+  const handleMonthDecrements = (currentMonth: number): void => {
+    if (currentMonth - 1 === 0) {
+      setDisplayMonth(12);
+      setDisplayYear(displayYear - 1);
+    } else {
+      setDisplayMonth(currentMonth - 1);
+    }
+  };
+
   const totalDaysSurfed = surfDaysToShow.filter((day) => day.surfed).length;
   const totalSurfableDays = surfDaysToShow.filter(
     (surfDayToShow) =>
@@ -88,14 +106,14 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
       <div className="flex justify-center gap-4">
         <div
           className="cursor-pointer"
-          onClick={() => setDisplayMonth(displayMonth - 1)}
+          onClick={() => handleMonthDecrements(displayMonth)}
         >
           {"<"}
         </div>
         <div>{DateTime.fromObject({ month: displayMonth }).monthLong}</div>
         <div
           className="cursor-pointer"
-          onClick={() => setDisplayMonth(displayMonth + 1)}
+          onClick={() => handleMonthIncrements(displayMonth)}
         >
           {">"}
         </div>
