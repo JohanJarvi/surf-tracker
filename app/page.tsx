@@ -17,13 +17,14 @@ export default async function Home() {
   return (
     <main>
       <SurfDaysCalendar surfDays={data?.daysSurfed || []} />
-      <div className="flex justify-center">
-        Total: {totalDaysSurfed} / {totalSurfableDays} (
-        {Math.ceil((totalDaysSurfed / totalSurfableDays) * 100)}%)
-      </div>
-      <br />
-      <div className="flex justify-center text-sm">
-        Total percentage target is {((300 / 360) * 100).toFixed(2)}%
+      <div className="flex flex-col gap-4 items-center mb-4">
+        <div>
+          Total: {totalDaysSurfed} / {totalSurfableDays} (
+          {Math.ceil((totalDaysSurfed / totalSurfableDays) * 100)}%)
+        </div>
+        <div className="text-sm">
+          Total percentage target is {((300 / 360) * 100).toFixed(2)}%
+        </div>
       </div>
     </main>
   );
