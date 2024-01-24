@@ -79,13 +79,15 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
     }
   };
 
-  const totalDaysSurfed = surfDaysToShow.filter((day) => day.surfed).length;
-  const totalSurfableDays = surfDaysToShow.filter(
-    (surfDayToShow) =>
-      surfDayToShow.surfed !== undefined &&
-      surfDayToShow.sickOrInjured !== undefined &&
-      surfDayToShow.sickOrInjured !== true
-  ).length;
+  const totalDaysSurfed =
+    surfDaysToShow.filter((day) => day.surfed).length || 0;
+  const totalSurfableDays =
+    surfDaysToShow.filter(
+      (surfDayToShow) =>
+        surfDayToShow.surfed !== undefined &&
+        surfDayToShow.sickOrInjured !== undefined &&
+        surfDayToShow.sickOrInjured !== true
+    ).length || 0;
 
   return (
     <div className="container mx-auto my-4 text-xl font-bold">
@@ -128,9 +130,15 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
             <SurfDay key={day.date} day={day} />
           ))}
       </div>
-      <div className="flex justify-center">
-        {totalDaysSurfed} / {totalSurfableDays} (
-        {Math.ceil((totalDaysSurfed / totalSurfableDays) * 100)}%)
+      <div className="flex justify-center gap-1">
+        <span>
+          Month: {totalDaysSurfed} / {totalSurfableDays}
+        </span>
+        {totalSurfableDays !== 0 && (
+          <span>
+            ({Math.ceil((totalDaysSurfed / totalSurfableDays) * 100)}%)
+          </span>
+        )}
       </div>
     </div>
   );

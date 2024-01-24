@@ -4,6 +4,7 @@ export type Day = {
     date: string;
     surfed?: boolean;
     sickOrInjured?: boolean;
+    restDay?: boolean;
 }
 
 type SurfDaysData = {
@@ -23,7 +24,7 @@ export const getSurfDays = async (): Promise<SurfDaysData | undefined> => {
     await client.connect();
     const collection: Collection<Day> = client.db("surfdays").collection<Day>("days");
     const documents = await collection.find().toArray();
-    const surfdays = documents.map<Day>((document) => ({date: document.date, surfed: document.surfed, sickOrInjured: document.sickOrInjured}))
+    const surfdays = documents.map<Day>((document) => ({date: document.date, surfed: document.surfed, sickOrInjured: document.sickOrInjured, restDay: document.restDay}))
 
     return {daysSurfed: surfdays}
   } catch (err) {
