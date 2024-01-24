@@ -93,7 +93,7 @@ export const SurfDay = ({ day }: SurfDayProps) => {
 
   return (
     <div
-      className={`flex justify-center w-44 p-10 ${tileState.backgroundColour} hover:${tileState.hoverBackgroundColour} rounded-lg`}
+      className={`flex justify-center w-28 md:w-44 p-5 md:p-10 ${tileState.backgroundColour} hover:${tileState.hoverBackgroundColour} rounded-lg text-xs md:text-base lg:text-xl`}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
