@@ -16,12 +16,9 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
       return dateTime.year === year && dateTime.month === month;
     });
 
-  const uniqueYears = [
-    ...new Set(surfDays.map((day) => DateTime.fromISO(day.date).year)),
-  ];
-
-  const [displayYear, setDisplayYear] = useState(uniqueYears.sort()[0]);
-  const [displayMonth, setDisplayMonth] = useState(1);
+  const dateTimeNow = DateTime.now();
+  const [displayYear, setDisplayYear] = useState(dateTimeNow.year);
+  const [displayMonth, setDisplayMonth] = useState(dateTimeNow.month.valueOf());
   const [surfDaysToShow, setSurfDaysToShow] = useState<Day[]>(
     filterSurfDays(surfDays, displayYear, displayMonth)
   );
@@ -91,34 +88,40 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
 
   return (
     <div className="container mx-auto my-4 text-xl font-bold">
-      <div className="flex justify-center gap-4">
-        <div
-          className="cursor-pointer"
-          onClick={() => setDisplayYear(displayYear - 1)}
-        >
-          {"<"}
+      <div className="select-none">
+        <div className="flex justify-center">
+          <div className="flex justify-between w-40">
+            <div
+              className="cursor-pointer"
+              onClick={() => setDisplayYear(displayYear - 1)}
+            >
+              {"<"}
+            </div>
+            <div>{displayYear}</div>
+            <div
+              className="cursor-pointer"
+              onClick={() => setDisplayYear(displayYear + 1)}
+            >
+              {">"}
+            </div>
+          </div>
         </div>
-        <div>{displayYear}</div>
-        <div
-          className="cursor-pointer"
-          onClick={() => setDisplayYear(displayYear + 1)}
-        >
-          {">"}
-        </div>
-      </div>
-      <div className="flex justify-center gap-4">
-        <div
-          className="cursor-pointer"
-          onClick={() => handleMonthDecrements(displayMonth)}
-        >
-          {"<"}
-        </div>
-        <div>{DateTime.fromObject({ month: displayMonth }).monthLong}</div>
-        <div
-          className="cursor-pointer"
-          onClick={() => handleMonthIncrements(displayMonth)}
-        >
-          {">"}
+        <div className="flex justify-center">
+          <div className="flex justify-between w-40">
+            <div
+              className="cursor-pointer"
+              onClick={() => handleMonthDecrements(displayMonth)}
+            >
+              {"<"}
+            </div>
+            <div>{DateTime.fromObject({ month: displayMonth }).monthLong}</div>
+            <div
+              className="cursor-pointer"
+              onClick={() => handleMonthIncrements(displayMonth)}
+            >
+              {">"}
+            </div>
+          </div>
         </div>
       </div>
       <div className="p-10 flex flex-row flex-wrap justify-center gap-5">
