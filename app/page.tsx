@@ -21,28 +21,20 @@ export default async function Home() {
     DateTime.fromISO(a.date) > DateTime.fromISO(b.date) ? 1 : -1
   );
 
-  let currentStreak = 0;
-  let longestStreak = 0;
+  let streak = 0;
   surfDays
     .map((daySurfed) => daySurfed.surfed)
     .forEach((surfBoolean) => {
-      if (currentStreak > longestStreak) {
-        longestStreak = currentStreak;
-      }
-
-      surfBoolean ? currentStreak++ : (currentStreak = 0);
+      surfBoolean ? streak++ : (streak = 0);
     });
-
-  const maxSurfStreak =
-    currentStreak > longestStreak ? currentStreak : longestStreak;
 
   return (
     <main>
       <SurfDaysCalendar surfDays={surfDays} />
       <div className="flex flex-col gap-4 items-center mb-4">
         <div>
-          Current surf streak is {maxSurfStreak} days
-          {"!".repeat(Math.ceil(maxSurfStreak / 5))}
+          Current surf streak is {streak} days
+          {"!".repeat(Math.ceil(streak / 5))}
         </div>
         <div>
           Total: {totalDaysSurfed} / {totalSurfableDays} (
