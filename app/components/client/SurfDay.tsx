@@ -14,11 +14,11 @@ type BackgroundColours =
   | "bg-slate-200";
 
 type HoverBackgroundColours =
-  | "bg-indigo-400"
-  | "bg-lime-400"
-  | "bg-orange-400"
-  | "bg-red-400"
-  | "bg-slate-400";
+  | "hover:bg-indigo-400"
+  | "hover:bg-lime-400"
+  | "hover:bg-orange-400"
+  | "hover:bg-red-400"
+  | "hover:bg-slate-400";
 
 type TileState = {
   description: string;
@@ -54,28 +54,28 @@ export const SurfDay = ({ day }: SurfDayProps) => {
         return {
           description: "Surfed!!",
           backgroundColour: "bg-lime-200",
-          hoverBackgroundColour: "bg-lime-400",
+          hoverBackgroundColour: "hover:bg-lime-400",
         };
 
       case "rest":
         return {
           description: "Rest :)",
           backgroundColour: "bg-indigo-200",
-          hoverBackgroundColour: "bg-indigo-400",
+          hoverBackgroundColour: "hover:bg-indigo-400",
         };
 
       case "injured":
         return {
           description: "Oh no :'(",
           backgroundColour: "bg-orange-200",
-          hoverBackgroundColour: "bg-orange-400",
+          hoverBackgroundColour: "hover:bg-orange-400",
         };
 
       case "skipped":
         return {
           description: "Lazy :(",
           backgroundColour: "bg-red-200",
-          hoverBackgroundColour: "bg-red-400",
+          hoverBackgroundColour: "hover:bg-red-400",
         };
 
       case "unknown":
@@ -83,7 +83,7 @@ export const SurfDay = ({ day }: SurfDayProps) => {
         return {
           description: "Go surf!",
           backgroundColour: "bg-slate-200",
-          hoverBackgroundColour: "bg-slate-400",
+          hoverBackgroundColour: "hover:bg-slate-400",
         };
     }
   };
@@ -93,7 +93,7 @@ export const SurfDay = ({ day }: SurfDayProps) => {
 
   return (
     <div
-      className={`flex justify-center w-28 md:w-44 p-5 md:p-10 ${tileState.backgroundColour} hover:${tileState.hoverBackgroundColour} rounded-lg text-xs md:text-base lg:text-xl`}
+      className={`flex justify-center w-28 md:w-44 p-5 md:p-10 ${tileState.backgroundColour} ${tileState.hoverBackgroundColour} rounded-lg text-xs md:text-base lg:text-xl`}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >

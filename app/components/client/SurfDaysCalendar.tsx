@@ -4,6 +4,7 @@ import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 import { SurfDay } from "./SurfDay";
 import { Day } from "../server/getSurfDays";
+import { PercentagePill } from "../server/percentagePill";
 
 type SurfDaysCalendarProps = {
   surfDays: Day[];
@@ -133,16 +134,16 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
             <SurfDay key={day.date} day={day} />
           ))}
       </div>
-      <div className="flex justify-center gap-1">
-        <span>
-          Month: {totalDaysSurfed} / {totalSurfableDays}
-        </span>
-        {totalSurfableDays !== 0 && (
+      {totalSurfableDays > 0 && (
+        <div className="flex justify-center gap-1 items-center">
           <span>
-            ({Math.ceil((totalDaysSurfed / totalSurfableDays) * 100)}%)
+            Month: {totalDaysSurfed} / {totalSurfableDays}
           </span>
-        )}
-      </div>
+          <PercentagePill
+            percentage={Math.ceil((totalDaysSurfed / totalSurfableDays) * 100)}
+          />
+        </div>
+      )}
     </div>
   );
 };
