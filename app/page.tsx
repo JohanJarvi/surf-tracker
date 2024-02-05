@@ -41,7 +41,7 @@ export default async function Home() {
           {Math.ceil((totalDaysSurfed / totalSurfableDays) * 100)}%)
         </div>
         <div className="text-sm">
-          Total percentage target is {((300 / 360) * 100).toFixed(2)}%
+          Total percentage target is {((260 / 360) * 100).toFixed(2)}%
         </div>
       </div>
     </main>
