@@ -1,11 +1,12 @@
+import { getMockedSurfDays } from "@/__mocks__/surfDays";
 import { Collection, MongoClient, ServerApiVersion } from "mongodb";
 
 export type Day = {
-    date: string;
-    surfed?: boolean;
-    sickOrInjured?: boolean;
-    restDay?: boolean;
-}
+  date: string;
+  surfed?: boolean;
+  sickOrInjured?: boolean;
+  restDay?: boolean;
+};
 
 type SurfDaysData = {
   daysSurfed: Day[];
@@ -20,13 +21,24 @@ const client = new MongoClient(process.env.MONGODB_URI as string, {
 });
 
 export const getSurfDays = async (): Promise<SurfDaysData | undefined> => {
+  if (process.env.LOCAL_DEV) {
+    return { daysSurfed: getMockedSurfDays() };
+  }
+
   try {
     await client.connect();
-    const collection: Collection<Day> = client.db("surfdays").collection<Day>("days");
+    const collection: Collection<Day> = client
+      .db("surfdays")
+      .collection<Day>("days");
     const documents = await collection.find().toArray();
-    const surfdays = documents.map<Day>((document) => ({date: document.date, surfed: document.surfed, sickOrInjured: document.sickOrInjured, restDay: document.restDay}))
+    const surfdays = documents.map<Day>((document) => ({
+      date: document.date,
+      surfed: document.surfed,
+      sickOrInjured: document.sickOrInjured,
+      restDay: document.restDay,
+    }));
 
-    return {daysSurfed: surfdays}
+    return { daysSurfed: surfdays };
   } catch (err) {
     console.error(`Failed to connect to DB: '${err}'`);
   }
