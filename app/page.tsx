@@ -41,9 +41,6 @@ export default async function Home() {
             percentage={Math.ceil((totalDaysSurfed / totalSurfableDays) * 100)}
           />
         </div>
-        <div className="text-xs italic">
-          Total percentage target is {((260 / 360) * 100).toFixed(2)}%
-        </div>
         <div>
           Current surf streak is {streak} days
           {"!".repeat(Math.ceil(streak / 5))}
