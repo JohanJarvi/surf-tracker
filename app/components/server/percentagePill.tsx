@@ -18,17 +18,17 @@ export const PercentagePill = ({ percentage }: PercentagePillProps) => {
 
     switch (true) {
       case percentage >= (sevenDaysAWeek / daysInYear) * 100:
-        return "bg-lime-600";
+        return "bg-indigo-400";
       case percentage >= (sixDaysAWeek / daysInYear) * 100:
-        return "bg-lime-400";
+        return "bg-indigo-200";
       case percentage >= (fiveDaysAWeek / daysInYear) * 100:
-        return "bg-lime-200";
+        return "bg-lime-400";
       case percentage >= (fourDaysAWeek / daysInYear) * 100:
-        return "bg-orange-200";
+        return "bg-lime-200";
       case percentage >= (threeDaysAWeek / daysInYear) * 100:
-        return "bg-orange-400";
+        return "bg-orange-200";
       case percentage >= (twoDaysAWeek / daysInYear) * 100:
-        return "bg-orange-600";
+        return "bg-orange-400";
       case percentage >= (oneDayAWeek / daysInYear) * 100:
         return "bg-red-200";
       default:
