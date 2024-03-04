@@ -4,7 +4,7 @@ import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 import { SurfDay } from "./SurfDay";
 import { Day } from "../server/getSurfDays";
-import { PercentagePill } from "../server/percentagePill";
+import { Ratio } from "./Ratio";
 
 type SurfDaysCalendarProps = {
   surfDays: Day[];
@@ -89,39 +89,37 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
 
   return (
     <div className="container mx-auto my-4 text-xl font-bold">
-      <div className="select-none">
-        <div className="flex justify-center">
-          <div className="flex justify-between w-40">
-            <div
-              className="cursor-pointer"
-              onClick={() => setDisplayYear(displayYear - 1)}
-            >
-              {"<"}
-            </div>
-            <div>{displayYear}</div>
-            <div
-              className="cursor-pointer"
-              onClick={() => setDisplayYear(displayYear + 1)}
-            >
-              {">"}
-            </div>
+      <div className="flex justify-center">
+        <div className="flex justify-between w-40">
+          <div
+            className="cursor-pointer select-none"
+            onClick={() => setDisplayYear(displayYear - 1)}
+          >
+            {"<"}
+          </div>
+          <div>{displayYear}</div>
+          <div
+            className="cursor-pointer select-none"
+            onClick={() => setDisplayYear(displayYear + 1)}
+          >
+            {">"}
           </div>
         </div>
-        <div className="flex justify-center">
-          <div className="flex justify-between w-40">
-            <div
-              className="cursor-pointer"
-              onClick={() => handleMonthDecrements(displayMonth)}
-            >
-              {"<"}
-            </div>
-            <div>{DateTime.fromObject({ month: displayMonth }).monthLong}</div>
-            <div
-              className="cursor-pointer"
-              onClick={() => handleMonthIncrements(displayMonth)}
-            >
-              {">"}
-            </div>
+      </div>
+      <div className="flex justify-center">
+        <div className="flex justify-between w-40">
+          <div
+            className="cursor-pointer select-none"
+            onClick={() => handleMonthDecrements(displayMonth)}
+          >
+            {"<"}
+          </div>
+          <div>{DateTime.fromObject({ month: displayMonth }).monthLong}</div>
+          <div
+            className="cursor-pointer select-none"
+            onClick={() => handleMonthIncrements(displayMonth)}
+          >
+            {">"}
           </div>
         </div>
       </div>
@@ -135,14 +133,11 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
           ))}
       </div>
       {totalSurfableDays > 0 && (
-        <div className="flex justify-center gap-1 items-center">
-          <span>
-            Month: {totalDaysSurfed} / {totalSurfableDays}
-          </span>
-          <PercentagePill
-            percentage={Math.ceil((totalDaysSurfed / totalSurfableDays) * 100)}
-          />
-        </div>
+        <Ratio
+          label="Month"
+          numerator={totalDaysSurfed}
+          denominator={totalSurfableDays}
+        />
       )}
     </div>
   );
