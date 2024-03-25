@@ -73,7 +73,7 @@ export const SurfDay = ({ day }: SurfDayProps) => {
 
       case "skipped":
         return {
-          description: "Lazy :(",
+          description: "Aww :(",
           backgroundColour: "bg-red-200",
           hoverBackgroundColour: "hover:bg-red-400",
         };
