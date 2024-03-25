@@ -6,6 +6,7 @@ export type Day = {
   surfed?: boolean;
   sickOrInjured?: boolean;
   restDay?: boolean;
+  travel?: boolean;
 };
 
 type SurfDaysData = {

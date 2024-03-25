@@ -11,6 +11,7 @@ type BackgroundColours =
   | "bg-lime-200"
   | "bg-orange-200"
   | "bg-red-200"
+  | "bg-fuchsia-200"
   | "bg-slate-200";
 
 type HoverBackgroundColours =
@@ -18,6 +19,7 @@ type HoverBackgroundColours =
   | "hover:bg-lime-400"
   | "hover:bg-orange-400"
   | "hover:bg-red-400"
+  | "hover:bg-fuchsia-400"
   | "hover:bg-slate-400";
 
 type TileState = {
@@ -26,7 +28,7 @@ type TileState = {
   hoverBackgroundColour: HoverBackgroundColours;
 };
 
-type DayInfo = "surfed" | "skipped" | "injured" | "rest" | "unknown";
+type DayInfo = "surfed" | "skipped" | "injured" | "rest" | "travel" | "unknown";
 
 export const SurfDay = ({ day }: SurfDayProps) => {
   const [hovering, setHovering] = useState(false);
@@ -35,7 +37,8 @@ export const SurfDay = ({ day }: SurfDayProps) => {
     if (
       day.surfed === undefined &&
       day.sickOrInjured === undefined &&
-      day.restDay === undefined
+      day.restDay === undefined &&
+      day.travel === undefined
     )
       return "unknown";
 
@@ -44,6 +47,8 @@ export const SurfDay = ({ day }: SurfDayProps) => {
     if (day.sickOrInjured) return "injured";
 
     if (day.restDay) return "rest";
+
+    if (day.travel) return "travel";
 
     return "skipped";
   };
@@ -76,6 +81,13 @@ export const SurfDay = ({ day }: SurfDayProps) => {
           description: "Aww :(",
           backgroundColour: "bg-red-200",
           hoverBackgroundColour: "hover:bg-red-400",
+        };
+
+      case "travel":
+        return {
+          description: "Away...",
+          backgroundColour: "bg-fuchsia-200",
+          hoverBackgroundColour: "hover:bg-fuchsia-400",
         };
 
       case "unknown":

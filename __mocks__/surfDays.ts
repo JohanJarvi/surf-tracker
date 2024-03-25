@@ -131,6 +131,7 @@ export const getMockedSurfDays = (): Day[] => [
     surfed: false,
     sickOrInjured: false,
     restDay: false,
+    travel: true,
   },
   {
     date: "2024-04-01",
