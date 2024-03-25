@@ -37,6 +37,7 @@ export const getSurfDays = async (): Promise<SurfDaysData | undefined> => {
       surfed: document.surfed,
       sickOrInjured: document.sickOrInjured,
       restDay: document.restDay,
+      travel: document.travel,
     }));
 
     return { daysSurfed: surfdays };
