@@ -9,7 +9,7 @@ export const getMockedSurfDays = (): Day[] => [
   { date: "2024-01-06", surfed: true, sickOrInjured: false },
   { date: "2024-01-07", surfed: true, sickOrInjured: false },
   { date: "2024-01-08", surfed: true, sickOrInjured: false },
-  { date: "2025-01-09", surfed: false, sickOrInjured: false },
+  { date: "2024-01-09", surfed: false, sickOrInjured: false },
   { date: "2024-01-10", surfed: true, sickOrInjured: false },
   { date: "2024-01-11", surfed: true, sickOrInjured: false },
   { date: "2024-01-12", surfed: true, sickOrInjured: false },

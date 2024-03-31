@@ -80,12 +80,8 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
   const totalDaysSurfed =
     surfDaysToShow.filter((day) => day.surfed).length || 0;
   const totalSurfableDays =
-    surfDaysToShow.filter(
-      (surfDayToShow) =>
-        surfDayToShow.surfed !== undefined &&
-        surfDayToShow.sickOrInjured !== undefined &&
-        surfDayToShow.sickOrInjured !== true
-    ).length || 0;
+    surfDaysToShow.filter((surfDayToShow) => surfDayToShow.surfed !== undefined)
+      .length || 0;
 
   return (
     <div className="container mx-auto my-4 text-xl font-bold">
