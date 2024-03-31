@@ -77,11 +77,27 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
     }
   };
 
-  const totalDaysSurfed =
-    surfDaysToShow.filter((day) => day.surfed).length || 0;
+  const totalDaysSurfed = surfDays.filter((day) => day.surfed).length || 0;
   const totalSurfableDays =
+    surfDays.filter((surfDayToShow) => surfDayToShow.surfed !== undefined)
+      .length || 0;
+
+  const totalDaysSurfedMonth =
+    surfDaysToShow.filter((day) => day.surfed).length || 0;
+  const totalSurfableDaysMonth =
     surfDaysToShow.filter((surfDayToShow) => surfDayToShow.surfed !== undefined)
       .length || 0;
+
+  surfDays.sort((a, b) =>
+    DateTime.fromISO(a.date) > DateTime.fromISO(b.date) ? 1 : -1
+  );
+
+  let streak = 0;
+  surfDays
+    .map((daySurfed) => daySurfed.surfed)
+    .forEach((surfBoolean) => {
+      surfBoolean ? streak++ : (streak = 0);
+    });
 
   return (
     <div className="container mx-auto my-4 text-xl font-bold">
@@ -128,13 +144,24 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
             <SurfDay key={day.date} day={day} />
           ))}
       </div>
-      {totalSurfableDays > 0 && (
+      <div className="flex flex-col gap-4 items-center mb-4">
         <Ratio
           label="Month"
-          numerator={totalDaysSurfed}
-          denominator={totalSurfableDays}
+          numerator={totalDaysSurfedMonth}
+          denominator={totalSurfableDaysMonth}
         />
-      )}
+        <div className="text-base">
+          <Ratio
+            label="This year"
+            numerator={totalDaysSurfed}
+            denominator={totalSurfableDays}
+          />
+        </div>
+        <div className="font-normal text-sm">
+          Current surf streak is {streak} days
+          {"!".repeat(Math.ceil(streak / 5))}
+        </div>
+      </div>
     </div>
   );
 };
