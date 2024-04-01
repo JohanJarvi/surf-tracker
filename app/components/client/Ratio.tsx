@@ -9,11 +9,15 @@ type RatioProps = {
 
 export const Ratio = ({ label, numerator, denominator }: RatioProps) => {
   return (
-    <div className="flex justify-center gap-1 items-center">
-      <span>
-        {label}: {numerator} / {denominator}
-      </span>
-      <PercentagePill percentage={Math.ceil((numerator / denominator) * 100)} />
-    </div>
+    denominator > 0 && (
+      <div className="flex justify-center gap-1 items-center">
+        <span>
+          {label}: {numerator} / {denominator}
+        </span>
+        <PercentagePill
+          percentage={Math.ceil((numerator / denominator) * 100)}
+        />
+      </div>
+    )
   );
 };

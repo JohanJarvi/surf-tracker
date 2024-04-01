@@ -79,8 +79,7 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
 
   const totalDaysSurfed = surfDays.filter((day) => day.surfed).length || 0;
   const totalSurfableDays =
-    surfDays.filter((surfDayToShow) => surfDayToShow.surfed !== undefined)
-      .length || 0;
+    surfDays.filter((surfDay) => surfDay.surfed !== undefined).length || 0;
 
   const totalDaysSurfedMonth =
     surfDaysToShow.filter((day) => day.surfed).length || 0;
@@ -152,7 +151,7 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
         />
         <div className="text-base">
           <Ratio
-            label="This year"
+            label="Total"
             numerator={totalDaysSurfed}
             denominator={totalSurfableDays}
           />
