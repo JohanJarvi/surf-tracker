@@ -78,7 +78,7 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
   };
 
   const isDaySurfable = (day: Day): boolean => {
-    return day.surfed !== undefined && !day.sickOrInjured;
+    return day.surfed !== undefined && !day.sickOrInjured && !day.travel;
   };
 
   const totalDaysSurfed = surfDays.filter((day) => day.surfed).length || 0;
