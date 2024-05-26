@@ -77,14 +77,18 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
     }
   };
 
+  const isDaySurfable = (day: Day): boolean => {
+    return day.surfed !== undefined && !day.sickOrInjured;
+  };
+
   const totalDaysSurfed = surfDays.filter((day) => day.surfed).length || 0;
   const totalSurfableDays =
-    surfDays.filter((surfDay) => surfDay.surfed !== undefined).length || 0;
+    surfDays.filter((surfDay) => isDaySurfable(surfDay)).length || 0;
 
   const totalDaysSurfedMonth =
     surfDaysToShow.filter((day) => day.surfed).length || 0;
   const totalSurfableDaysMonth =
-    surfDaysToShow.filter((surfDayToShow) => surfDayToShow.surfed !== undefined)
+    surfDaysToShow.filter((surfDaysToShow) => isDaySurfable(surfDaysToShow))
       .length || 0;
 
   surfDays.sort((a, b) =>
