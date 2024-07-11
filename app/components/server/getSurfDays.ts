@@ -1,5 +1,6 @@
 import { getMockedSurfDays } from "@/__mocks__/surfDays";
 import { Collection, MongoClient, ServerApiVersion } from "mongodb";
+import { cache } from "react";
 
 export type Day = {
   date: string;
@@ -21,27 +22,29 @@ const client = new MongoClient(process.env.MONGODB_URI as string, {
   },
 });
 
-export const getSurfDays = async (): Promise<SurfDaysData | undefined> => {
-  if (process.env.LOCAL_DEV) {
-    return { daysSurfed: getMockedSurfDays() };
-  }
+export const getSurfDays = cache(
+  async (): Promise<SurfDaysData | undefined> => {
+    if (process.env.LOCAL_DEV) {
+      return { daysSurfed: getMockedSurfDays() };
+    }
 
-  try {
-    await client.connect();
-    const collection: Collection<Day> = client
-      .db("surfdays")
-      .collection<Day>("days");
-    const documents = await collection.find().toArray();
-    const surfdays = documents.map<Day>((document) => ({
-      date: document.date,
-      surfed: document.surfed,
-      sickOrInjured: document.sickOrInjured,
-      restDay: document.restDay,
-      travel: document.travel,
-    }));
+    try {
+      await client.connect();
+      const collection: Collection<Day> = client
+        .db("surfdays")
+        .collection<Day>("days");
+      const documents = await collection.find().toArray();
+      const surfdays = documents.map<Day>((document) => ({
+        date: document.date,
+        surfed: document.surfed,
+        sickOrInjured: document.sickOrInjured,
+        restDay: document.restDay,
+        travel: document.travel,
+      }));
 
-    return { daysSurfed: surfdays };
-  } catch (err) {
-    console.error(`Failed to connect to DB: '${err}'`);
+      return { daysSurfed: surfdays };
+    } catch (err) {
+      console.error(`Failed to connect to DB: '${err}'`);
+    }
   }
-};
+);
