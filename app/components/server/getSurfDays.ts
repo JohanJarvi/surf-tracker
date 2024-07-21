@@ -8,6 +8,7 @@ export type Day = {
   sickOrInjured?: boolean;
   restDay?: boolean;
   travel?: boolean;
+  flat?: boolean;
 };
 
 type SurfDaysData = {
@@ -40,6 +41,7 @@ export const getSurfDays = cache(
         sickOrInjured: document.sickOrInjured,
         restDay: document.restDay,
         travel: document.travel,
+        flat: document.flat,
       }));
 
       return { daysSurfed: surfdays };
