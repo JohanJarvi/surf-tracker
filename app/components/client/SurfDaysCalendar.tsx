@@ -157,9 +157,16 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
         />
         <div className="text-base">
           <Ratio
-            label="Total"
+            label="Total (surfable days)"
             numerator={totalDaysSurfed}
             denominator={totalSurfableDays}
+          />
+        </div>
+        <div className="text-base">
+          <Ratio
+            label="Total (all days)"
+            numerator={totalDaysSurfed}
+            denominator={surfDays.length}
           />
         </div>
         <div className="font-normal text-sm">
