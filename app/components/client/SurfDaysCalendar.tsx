@@ -21,7 +21,7 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
   const [displayYear, setDisplayYear] = useState(dateTimeNow.year);
   const [displayMonth, setDisplayMonth] = useState(dateTimeNow.month.valueOf());
   const [surfDaysToShow, setSurfDaysToShow] = useState<Day[]>(
-    filterSurfDays(surfDays, displayYear, displayMonth)
+    filterSurfDays(surfDays, displayYear, displayMonth),
   );
 
   useEffect(() => {
@@ -43,17 +43,17 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
     const filteredSurfDays = filterSurfDays(
       surfDays,
       displayYear,
-      displayMonth
+      displayMonth,
     );
 
     const mappedSurfDays = allPotentialSurfDaysInMonth.map(
       (potentialSurfDay) => {
         return (
           filteredSurfDays.find(
-            (filteredSurfDay) => filteredSurfDay.date === potentialSurfDay.date
+            (filteredSurfDay) => filteredSurfDay.date === potentialSurfDay.date,
           ) || potentialSurfDay
         );
-      }
+      },
     );
 
     setSurfDaysToShow(mappedSurfDays);
@@ -83,6 +83,16 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
     );
   };
 
+  const doesDayContainData = (day: Day): boolean => {
+    return (
+      day.surfed !== undefined ||
+      day.sickOrInjured !== undefined ||
+      day.restDay !== undefined ||
+      day.travel !== undefined ||
+      day.flat !== undefined
+    );
+  };
+
   const totalDaysSurfed = surfDays.filter((day) => day.surfed).length || 0;
   const totalSurfableDays =
     surfDays.filter((surfDay) => isDaySurfable(surfDay)).length || 0;
@@ -93,8 +103,12 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
     surfDaysToShow.filter((surfDaysToShow) => isDaySurfable(surfDaysToShow))
       .length || 0;
 
+  const totalDaysInMonthWithData =
+    surfDaysToShow.filter((dayToShow) => doesDayContainData(dayToShow))
+      .length || 0;
+
   surfDays.sort((a, b) =>
-    DateTime.fromISO(a.date) > DateTime.fromISO(b.date) ? 1 : -1
+    DateTime.fromISO(a.date) > DateTime.fromISO(b.date) ? 1 : -1,
   );
 
   let streak = 0;
@@ -143,7 +157,7 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
       <div className="p-10 flex flex-row flex-wrap justify-center gap-5">
         {surfDaysToShow
           .sort((a, b) =>
-            DateTime.fromISO(a.date) > DateTime.fromISO(b.date) ? 1 : -1
+            DateTime.fromISO(a.date) > DateTime.fromISO(b.date) ? 1 : -1,
           )
           .map((day) => (
             <SurfDay key={day.date} day={day} />
@@ -151,9 +165,14 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
       </div>
       <div className="flex flex-col gap-4 items-center mb-4">
         <Ratio
-          label="Month"
+          label="Month (surfable days)"
           numerator={totalDaysSurfedMonth}
           denominator={totalSurfableDaysMonth}
+        />
+        <Ratio
+          label="Month (all days)"
+          numerator={totalDaysSurfedMonth}
+          denominator={totalDaysInMonthWithData}
         />
         <div className="text-base">
           <Ratio

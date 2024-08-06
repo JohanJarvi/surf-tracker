@@ -48,5 +48,5 @@ export const getSurfDays = cache(
     } catch (err) {
       console.error(`Failed to connect to DB: '${err}'`);
     }
-  }
+  },
 );
