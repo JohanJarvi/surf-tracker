@@ -17,9 +17,10 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
       return dateTime.year === year && dateTime.month === month;
     });
 
-  const dateTimeNow = DateTime.now();
-  const [displayYear, setDisplayYear] = useState(dateTimeNow.year);
-  const [displayMonth, setDisplayMonth] = useState(dateTimeNow.month.valueOf());
+  const latestDate = DateTime.max(...surfDays.map((surfDay) => DateTime.fromISO(surfDay.date)));
+
+  const [displayYear, setDisplayYear] = useState(latestDate.year);
+  const [displayMonth, setDisplayMonth] = useState(latestDate.month);
   const [surfDaysToShow, setSurfDaysToShow] = useState<Day[]>(
     filterSurfDays(surfDays, displayYear, displayMonth),
   );
