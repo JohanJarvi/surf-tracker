@@ -135,9 +135,11 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
     );
   };
 
-  const totalDaysSurfed = surfDays.filter((day) => day.surfed).length || 0;
+  const surfDaysForYear = surfDays.filter((day) => DateTime.fromISO(day.date).year === displayYear);
+
+  const totalDaysSurfed = surfDaysForYear.filter((day) => day.surfed).length || 0;
   const totalSurfableDays =
-    surfDays.filter((surfDay) => isDaySurfable(surfDay)).length || 0;
+    surfDaysForYear.filter((surfDay) => isDaySurfable(surfDay)).length || 0;
 
   const totalDaysSurfedMonth =
     surfDaysToShow.filter((day) => day.surfed).length || 0;
@@ -231,7 +233,7 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
           <Ratio
             label="Total (all days)"
             numerator={totalDaysSurfed}
-            denominator={surfDays.length}
+            denominator={surfDaysForYear.length}
           />
         </div>
         <div className="font-normal text-sm">
