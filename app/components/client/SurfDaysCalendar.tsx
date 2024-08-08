@@ -99,6 +99,25 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
     }
   };
 
+  const doesDisplayYearContainSurfData = (displayYear: number): boolean => {
+    return surfDays.some((day) => DateTime.fromISO(day.date).year === displayYear);
+  }
+
+  const handleYearlyIncrements = (): void => {
+    const nextDisplayYear = displayYear + 1;
+    if (doesDisplayYearContainSurfData(nextDisplayYear)) {
+      setDisplayYear(nextDisplayYear);
+      setDisplayMonth(1);
+    };
+  };
+
+  const handleYearlyDecrements = (): void => {
+    const nextDisplayYear = displayYear - 1;
+    if (doesDisplayYearContainSurfData(nextDisplayYear)) {
+      setDisplayYear(nextDisplayYear);
+      setDisplayMonth(1);
+    };
+  };
   const isDaySurfable = (day: Day): boolean => {
     return (
       day.surfed !== undefined && !day.sickOrInjured && !day.travel && !day.flat
@@ -144,19 +163,21 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
     <div className="container mx-auto my-4 text-xl font-bold">
       <div className="flex justify-center">
         <div className="flex justify-between w-40">
-          <div
-            className="cursor-pointer select-none"
-            onClick={() => setDisplayYear(displayYear - 1)}
-          >
-            {"<"}
-          </div>
+          {doesDisplayYearContainSurfData(displayYear - 1) ?
+            <div
+              className="cursor-pointer select-none"
+              onClick={handleYearlyDecrements}
+            >
+              {"<"}
+            </div> : <div className="select-none">&nbsp;</div>}
           <div>{displayYear}</div>
-          <div
-            className="cursor-pointer select-none"
-            onClick={() => setDisplayYear(displayYear + 1)}
-          >
-            {">"}
-          </div>
+          {doesDisplayYearContainSurfData(displayYear + 1) ?
+            <div
+              className="cursor-pointer select-none"
+              onClick={handleYearlyIncrements}
+            >
+              {">"}
+            </div> : <div className="select-none">&nbsp;</div>}
         </div>
       </div>
       <div className="flex justify-center">
