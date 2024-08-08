@@ -17,9 +17,10 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
       return dateTime.year === year && dateTime.month === month;
     });
 
-  const dateTimeNow = DateTime.now();
-  const [displayYear, setDisplayYear] = useState(dateTimeNow.year);
-  const [displayMonth, setDisplayMonth] = useState(dateTimeNow.month.valueOf());
+  const latestDate = DateTime.max(...surfDays.map((surfDay) => DateTime.fromISO(surfDay.date)));
+
+  const [displayYear, setDisplayYear] = useState(latestDate.year);
+  const [displayMonth, setDisplayMonth] = useState(latestDate.month);
   const [surfDaysToShow, setSurfDaysToShow] = useState<Day[]>(
     filterSurfDays(surfDays, displayYear, displayMonth),
   );
@@ -59,24 +60,65 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
     setSurfDaysToShow(mappedSurfDays);
   }, [displayYear, displayMonth]);
 
+  const doesDisplayMonthOfCurrentYearContainSurfData = (displayMonth: number, displayYear: number): boolean => {
+    return surfDays.some((day) => {
+      const dateTime = DateTime.fromISO(day.date);
+      const month = dateTime.month;
+      const year = dateTime.year;
+
+      return displayMonth === month && displayYear === year;
+    });
+  }
+
   const handleMonthIncrements = (currentMonth: number): void => {
-    if (currentMonth + 1 === 13) {
-      setDisplayMonth(1);
-      setDisplayYear(displayYear + 1);
-    } else {
+    const nextDisplayMonth = currentMonth + 1;
+
+    if (doesDisplayMonthOfCurrentYearContainSurfData(nextDisplayMonth, displayYear)) {
       setDisplayMonth(currentMonth + 1);
+    } else {
+      for (let i = nextDisplayMonth; i <= 12; i++) {
+        if (doesDisplayMonthOfCurrentYearContainSurfData(i, displayYear)) {
+          setDisplayMonth(i);
+          break;
+        }
+      }
     }
   };
 
   const handleMonthDecrements = (currentMonth: number): void => {
-    if (currentMonth - 1 === 0) {
-      setDisplayMonth(12);
-      setDisplayYear(displayYear - 1);
-    } else {
+    const nextDisplayMonth = currentMonth - 1;
+
+    if (doesDisplayMonthOfCurrentYearContainSurfData(nextDisplayMonth, displayYear)) {
       setDisplayMonth(currentMonth - 1);
+    } else {
+      for (let i = nextDisplayMonth; i >= 1; i--) {
+        if (doesDisplayMonthOfCurrentYearContainSurfData(i, displayYear)) {
+          setDisplayMonth(i);
+          break;
+        }
+      }
     }
   };
 
+  const doesDisplayYearContainSurfData = (displayYear: number): boolean => {
+    return surfDays.some((day) => DateTime.fromISO(day.date).year === displayYear);
+  }
+
+  const handleYearlyIncrements = (): void => {
+    const nextDisplayYear = displayYear + 1;
+    if (doesDisplayYearContainSurfData(nextDisplayYear)) {
+      setDisplayYear(nextDisplayYear);
+      setDisplayMonth(1);
+    };
+  };
+
+  const handleYearlyDecrements = (): void => {
+    const nextDisplayYear = displayYear - 1;
+    if (doesDisplayYearContainSurfData(nextDisplayYear)) {
+      setDisplayYear(nextDisplayYear);
+      setDisplayMonth(1);
+    };
+  };
   const isDaySurfable = (day: Day): boolean => {
     return (
       day.surfed !== undefined && !day.sickOrInjured && !day.travel && !day.flat
@@ -122,36 +164,40 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
     <div className="container mx-auto my-4 text-xl font-bold">
       <div className="flex justify-center">
         <div className="flex justify-between w-40">
-          <div
-            className="cursor-pointer select-none"
-            onClick={() => setDisplayYear(displayYear - 1)}
-          >
-            {"<"}
-          </div>
+          {doesDisplayYearContainSurfData(displayYear - 1) ?
+            <div
+              className="cursor-pointer select-none"
+              onClick={handleYearlyDecrements}
+            >
+              {"<"}
+            </div> : <div className="select-none">&nbsp;</div>}
           <div>{displayYear}</div>
-          <div
-            className="cursor-pointer select-none"
-            onClick={() => setDisplayYear(displayYear + 1)}
-          >
-            {">"}
-          </div>
+          {doesDisplayYearContainSurfData(displayYear + 1) ?
+            <div
+              className="cursor-pointer select-none"
+              onClick={handleYearlyIncrements}
+            >
+              {">"}
+            </div> : <div className="select-none">&nbsp;</div>}
         </div>
       </div>
       <div className="flex justify-center">
         <div className="flex justify-between w-40">
-          <div
-            className="cursor-pointer select-none"
-            onClick={() => handleMonthDecrements(displayMonth)}
-          >
-            {"<"}
-          </div>
+          {displayMonth !== 1 ?
+            <div
+              className="cursor-pointer select-none"
+              onClick={() => handleMonthDecrements(displayMonth)}
+            >
+              {"<"}
+            </div> : <div className="select-none">&nbsp;</div>}
           <div>{DateTime.fromObject({ month: displayMonth }).monthLong}</div>
-          <div
-            className="cursor-pointer select-none"
-            onClick={() => handleMonthIncrements(displayMonth)}
-          >
-            {">"}
-          </div>
+          {displayMonth !== 12 ?
+            <div
+              className="cursor-pointer select-none"
+              onClick={() => handleMonthIncrements(displayMonth)}
+            >
+              {">"}
+            </div> : <div className="select-none">&nbsp;</div>}
         </div>
       </div>
       <div className="p-10 flex flex-row flex-wrap justify-center gap-5">
