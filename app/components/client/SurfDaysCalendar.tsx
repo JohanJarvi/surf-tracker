@@ -10,6 +10,16 @@ type SurfDaysCalendarProps = {
   surfDays: Day[];
 };
 
+type CalendarSegment = {
+  month: number | undefined;
+  year: number | undefined;
+}
+
+type DisplaySegments = {
+  previous: CalendarSegment;
+  next: CalendarSegment;
+}
+
 export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
   const filterSurfDays = (daysSurfed: Day[], year: number, month: number) =>
     daysSurfed.filter((day) => {
@@ -17,13 +27,34 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
       return dateTime.year === year && dateTime.month === month;
     });
 
-  const latestDate = DateTime.max(...surfDays.map((surfDay) => DateTime.fromISO(surfDay.date)));
+  const surfDayDateTimes = surfDays.map((surfDay) => DateTime.fromISO(surfDay.date));
+  const latestDate = DateTime.max(...surfDayDateTimes);
 
   const [displayYear, setDisplayYear] = useState(latestDate.year);
   const [displayMonth, setDisplayMonth] = useState(latestDate.month);
   const [surfDaysToShow, setSurfDaysToShow] = useState<Day[]>(
     filterSurfDays(surfDays, displayYear, displayMonth),
   );
+  const [displaySegments, setDisplaySegments] = useState<DisplaySegments>();
+
+  const findPreviousAndFutureCalendarSegments = (currentMonth: number, currentYear: number): void => {
+    const onlyFutureDates = surfDayDateTimes.filter((dateTime) => (dateTime.month > currentMonth && dateTime.year === currentYear) || (dateTime.year > currentYear))
+    const onlyPastDates = surfDayDateTimes.filter((dateTime) => (dateTime.month < currentMonth && dateTime.year === currentYear) || (dateTime.month > currentMonth && dateTime.year < currentYear))
+
+    const nextDateTime = DateTime.min(...onlyFutureDates);
+    const previousDateTime = DateTime.max(...onlyPastDates);
+
+    setDisplaySegments({
+      previous: {
+        month: previousDateTime?.month,
+        year: previousDateTime?.year
+      },
+      next: {
+        month: nextDateTime?.month,
+        year: nextDateTime?.year
+      }
+    });
+  }
 
   useEffect(() => {
     const daysInMonth =
@@ -58,67 +89,24 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
     );
 
     setSurfDaysToShow(mappedSurfDays);
+
+    findPreviousAndFutureCalendarSegments(displayMonth, displayYear);
   }, [displayYear, displayMonth]);
 
-  const doesDisplayMonthOfCurrentYearContainSurfData = (displayMonth: number, displayYear: number): boolean => {
-    return surfDays.some((day) => {
-      const dateTime = DateTime.fromISO(day.date);
-      const month = dateTime.month;
-      const year = dateTime.year;
-
-      return displayMonth === month && displayYear === year;
-    });
+  const handleSegmentIncrement = (): void => {
+    if (displaySegments?.next?.month && displaySegments?.next?.year) {
+      setDisplayMonth(displaySegments.next.month);
+      setDisplayYear(displaySegments.next.year);
+    }
   }
 
-  const handleMonthIncrements = (currentMonth: number): void => {
-    const nextDisplayMonth = currentMonth + 1;
-
-    if (doesDisplayMonthOfCurrentYearContainSurfData(nextDisplayMonth, displayYear)) {
-      setDisplayMonth(currentMonth + 1);
-    } else {
-      for (let i = nextDisplayMonth; i <= 12; i++) {
-        if (doesDisplayMonthOfCurrentYearContainSurfData(i, displayYear)) {
-          setDisplayMonth(i);
-          break;
-        }
-      }
+  const handleSegmentDecrement = (): void => {
+    if (displaySegments?.previous?.month && displaySegments?.previous?.year) {
+      setDisplayMonth(displaySegments.previous.month);
+      setDisplayYear(displaySegments.previous.year);
     }
-  };
-
-  const handleMonthDecrements = (currentMonth: number): void => {
-    const nextDisplayMonth = currentMonth - 1;
-
-    if (doesDisplayMonthOfCurrentYearContainSurfData(nextDisplayMonth, displayYear)) {
-      setDisplayMonth(currentMonth - 1);
-    } else {
-      for (let i = nextDisplayMonth; i >= 1; i--) {
-        if (doesDisplayMonthOfCurrentYearContainSurfData(i, displayYear)) {
-          setDisplayMonth(i);
-          break;
-        }
-      }
-    }
-  };
-
-  const doesDisplayYearContainSurfData = (displayYear: number): boolean => {
-    return surfDays.some((day) => DateTime.fromISO(day.date).year === displayYear);
   }
 
-  const handleYearlyIncrements = (): void => {
-    const nextDisplayYear = displayYear + 1;
-    if (doesDisplayYearContainSurfData(nextDisplayYear)) {
-      setDisplayYear(nextDisplayYear);
-      setDisplayMonth(1);
-    };
-  };
-
-  const handleYearlyDecrements = (): void => {
-    const nextDisplayYear = displayYear - 1;
-    if (doesDisplayYearContainSurfData(nextDisplayYear)) {
-      setDisplayYear(nextDisplayYear);
-      setDisplayMonth(1);
-    };
-  };
   const isDaySurfable = (day: Day): boolean => {
     return (
       day.surfed !== undefined && !day.sickOrInjured && !day.travel && !day.flat
@@ -157,49 +145,28 @@ export const SurfDaysCalendar = ({ surfDays }: SurfDaysCalendarProps) => {
 
   let streak = 0;
   surfDays
-    .map((daySurfed) => daySurfed.surfed)
-    .forEach((surfBoolean) => {
-      surfBoolean ? streak++ : (streak = 0);
+    .forEach((surfDay) => {
+      surfDay.surfed ? streak++ : (streak = 0);
     });
 
   return (
     <div className="container mx-auto my-4 text-xl font-bold">
-      <div className="flex justify-center">
-        <div className="flex justify-between w-40">
-          {doesDisplayYearContainSurfData(displayYear - 1) ?
-            <div
-              className="cursor-pointer select-none"
-              onClick={handleYearlyDecrements}
-            >
-              {"<"}
-            </div> : <div className="select-none">&nbsp;</div>}
-          <div>{displayYear}</div>
-          {doesDisplayYearContainSurfData(displayYear + 1) ?
-            <div
-              className="cursor-pointer select-none"
-              onClick={handleYearlyIncrements}
-            >
-              {">"}
-            </div> : <div className="select-none">&nbsp;</div>}
+      <div className="flex justify-center items-center gap-5">
+        <div
+          className="cursor-pointer select-none text-2xl"
+          onClick={handleSegmentDecrement}
+        >
+          {"<"}
         </div>
-      </div>
-      <div className="flex justify-center">
-        <div className="flex justify-between w-40">
-          {displayMonth !== 1 ?
-            <div
-              className="cursor-pointer select-none"
-              onClick={() => handleMonthDecrements(displayMonth)}
-            >
-              {"<"}
-            </div> : <div className="select-none">&nbsp;</div>}
+        <div className="flex flex-col items-center w-36 select-none">
+          <div>{displayYear}</div>
           <div>{DateTime.fromObject({ month: displayMonth }).monthLong}</div>
-          {displayMonth !== 12 ?
-            <div
-              className="cursor-pointer select-none"
-              onClick={() => handleMonthIncrements(displayMonth)}
-            >
-              {">"}
-            </div> : <div className="select-none">&nbsp;</div>}
+        </div>
+        <div
+          className="cursor-pointer select-none text-2xl"
+          onClick={handleSegmentIncrement}
+        >
+          {">"}
         </div>
       </div>
       <div className="p-10 flex flex-row flex-wrap justify-center gap-5">
